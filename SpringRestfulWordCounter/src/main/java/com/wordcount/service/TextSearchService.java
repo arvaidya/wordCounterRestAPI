@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -83,18 +85,16 @@ public class TextSearchService {
 	 * 
 	 * @param text
 	 * @return
+	 * @throws IOException
 	 */
-	private int getCountOfText(String text) {
+	private int getCountOfText(String text) throws IOException {
 
 		int count = 0;
-		
-		String current = new java.io.File( "." ).getAbsolutePath();
-		
-		System.out.println("current path "+current);
 
+		
 		// read file
 		try (BufferedReader br = new BufferedReader(new FileReader(
-				"C:\\Users\\Vaidya\\git\\wordCounterRestAPI\\SpringRestfulWordCounter\\src\\main\\java\\resources\\testing.txt"))) {
+				System.getProperty("catalina.base") + "\\webapps\\SpringRestfulWordCounter\\resources\\testing.txt"))) {
 
 			System.out.println("Inside try");
 
@@ -133,12 +133,11 @@ public class TextSearchService {
 	 */
 	public File returnCount(int count) {
 
-		File csv = new File(
-				"C:\\Users\\Vaidya\\git\\wordCounterRestAPI\\SpringRestfulWordCounter\\TopCount.csv");
+		File csv = new File(System.getProperty("catalina.base") + "\\webapps\\SpringRestfulWordCounter\\resources\\TopCount.csv");
 
 		// read file
-		try (BufferedReader br = new BufferedReader(new FileReader(
-				"C:\\Users\\Vaidya\\git\\wordCounterRestAPI\\SpringRestfulWordCounter\\src\\main\\java\\resources\\testing.txt"))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(System.getProperty("catalina.base")
+				+ "\\webapps\\SpringRestfulWordCounter\\resources\\testing.txt"))) {
 
 			String sCurrentLine;
 			Set<String> tokenSet = new HashSet<String>();
@@ -195,11 +194,16 @@ public class TextSearchService {
 	 * @throws IOException
 	 */
 	private void generateCsvFile(int count, Map sortedResultMap) throws IOException {
+
+		String currentRelativePath = new File("").getAbsoluteFile().toString();
+		System.out.println("currentRelativePath " + currentRelativePath);
+
 		ICsvMapWriter mapWriter = null;
+
 		try {
 			mapWriter = new CsvMapWriter(
-					new FileWriter(
-							"C:\\Users\\Vaidya\\git\\wordCounterRestAPI\\SpringRestfulWordCounter\\TopCount.csv"),
+					new FileWriter(System.getProperty("catalina.base")
+							+ "\\webapps\\SpringRestfulWordCounter\\resources\\TopCount.csv"),
 					CsvPreference.STANDARD_PREFERENCE);
 
 			final CellProcessor[] processors = getProcessors();
@@ -275,16 +279,14 @@ class ValueComparator implements Comparator {
 	public int compare(Object keyA, Object keyB) {
 		Comparable valueA = (Comparable) map.get(keyA);
 		Comparable valueB = (Comparable) map.get(keyB);
-		
-		System.out.println("ValueA : ValueB : compare "+valueA+" : "+valueB+" : "+valueB.compareTo(valueA));
-		
-		 if(valueB.compareTo(valueA) == 0){
-	            return 1;
-	        }
-	        else{
-	        	return valueB.compareTo(valueA);
-	        }
-		
-		
+
+		System.out.println("ValueA : ValueB : compare " + valueA + " : " + valueB + " : " + valueB.compareTo(valueA));
+
+		if (valueB.compareTo(valueA) == 0) {
+			return 1;
+		} else {
+			return valueB.compareTo(valueA);
+		}
+
 	}
 }
