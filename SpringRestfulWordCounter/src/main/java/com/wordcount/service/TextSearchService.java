@@ -87,6 +87,10 @@ public class TextSearchService {
 	private int getCountOfText(String text) {
 
 		int count = 0;
+		
+		String current = new java.io.File( "." ).getAbsolutePath();
+		
+		System.out.println("current path "+current);
 
 		// read file
 		try (BufferedReader br = new BufferedReader(new FileReader(
