@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.wordcount.util.TextSearchService;
+import com.wordcount.service.TextSearchService;
 
 @RestController
 public class WordCountController {
